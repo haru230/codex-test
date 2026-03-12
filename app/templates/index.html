@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo App</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { margin-bottom: 1rem; }
+    form.inline { display: inline; }
+    ul { list-style: none; padding: 0; }
+    li { display: flex; justify-content: space-between; align-items: center; border: 1px solid #ddd; padding: 0.75rem; margin-bottom: 0.5rem; border-radius: 8px; }
+    .done { text-decoration: line-through; color: #666; }
+    .actions { display: flex; gap: 0.5rem; }
+    button { cursor: pointer; }
+    .add-form { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+    input[type="text"] { flex: 1; padding: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>📝 Todo List</h1>
+
+  <form class="add-form" action="/todos" method="post">
+    <input type="text" name="title" placeholder="Add a new todo" required minlength="1" maxlength="255" />
+    <button type="submit">Add</button>
+  </form>
+
+  <ul>
+    {% for todo in todos %}
+    <li>
+      <span class="{% if todo.completed %}done{% endif %}">{{ todo.title }}</span>
+      <div class="actions">
+        <form class="inline" action="/todos/{{ todo.id }}/toggle" method="post">
+          <button type="submit">{% if todo.completed %}Undo{% else %}Done{% endif %}</button>
+        </form>
+        <form class="inline" action="/todos/{{ todo.id }}/delete" method="post">
+          <button type="submit">Delete</button>
+        </form>
+      </div>
+    </li>
+    {% else %}
+    <li>No todos yet. Add your first task!</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
