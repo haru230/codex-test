@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem auto;
+            max-width: 700px;
+            padding: 0 1rem;
+            background: #f8fafc;
+            color: #1f2937;
+        }
+        h1 { margin-bottom: 1rem; }
+        form.inline { display: inline; }
+        .add-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 0.55rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+        }
+        button {
+            border: none;
+            padding: 0.55rem 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .add-btn { background: #2563eb; color: #fff; }
+        .toggle-btn { background: #10b981; color: #fff; }
+        .delete-btn { background: #ef4444; color: #fff; }
+        ul { list-style: none; padding: 0; }
+        li {
+            background: white;
+            border-radius: 10px;
+            padding: 0.7rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+        }
+        .todo-title.done {
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>✅ FastAPI Todo List</h1>
+
+    <form class="add-form" action="/todos" method="post">
+        <input type="text" name="title" placeholder="Add a new todo..." required />
+        <button class="add-btn" type="submit">Add</button>
+    </form>
+
+    <ul>
+        {% for todo in todos %}
+        <li>
+            <span class="todo-title {% if todo['completed'] %}done{% endif %}">
+                {{ todo["title"] }}
+            </span>
+            <div class="actions">
+                <form class="inline" action="/todos/{{ todo['id'] }}/toggle" method="post">
+                    <button class="toggle-btn" type="submit">
+                        {% if todo['completed'] %}Undo{% else %}Done{% endif %}
+                    </button>
+                </form>
+                <form class="inline" action="/todos/{{ todo['id'] }}/delete" method="post">
+                    <button class="delete-btn" type="submit">Delete</button>
+                </form>
+            </div>
+        </li>
+        {% else %}
+        <li>No todos yet. Add your first task!</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
